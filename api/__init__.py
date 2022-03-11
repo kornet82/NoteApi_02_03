@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 from flask_httpauth import HTTPBasicAuth
-
+from flasgger import Swagger
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 ma = Marshmallow(app)
 auth = HTTPBasicAuth()
-
+swagger = Swagger()
 
 @auth.verify_password
 def verify_password(username_or_token, password):

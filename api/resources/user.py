@@ -5,6 +5,14 @@ from api.schemas.user import user_schema, users_schema
 
 class UserResource(Resource):
     def get(self, user_id):
+        # language=YAML
+        """
+        Get User by id
+        ---
+        tags:
+            - Users
+        """
+
         user = UserModel.query.get(user_id)
         if user:
             abort(403, error=f"User with id={user_id} not found")
@@ -27,6 +35,14 @@ class UserResource(Resource):
 
 class UsersListResource(Resource):
     def get(self):
+        # language=YAML
+        """
+        Get all Users
+        ---
+        tags:
+            - Users
+        """
+
         users = UserModel.query.all()
         return users_schema.dump(users), 200
 
