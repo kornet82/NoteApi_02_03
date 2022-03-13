@@ -19,8 +19,8 @@ class UserResource(MethodResource):
             abort(404, error=f"User with id={user_id} not found")
         return user, 200
 
-    #@auth.login_required(role="admin")
-    @auth.login_required
+    @auth.login_required(role="admin")
+    # @auth.login_required
     @doc(security=[{"basicAuth": []}])
     @doc(summary="Edit User")
     @marshal_with(UserSchema,code=200)
@@ -34,9 +34,18 @@ class UserResource(MethodResource):
         user.save()
         return user, 200
 
-    @auth.login_required
-    def delete(self, user_id):
-        raise NotImplemented  # не реализовано!
+    @auth.login_required(role="admin")
+    @doc(security=[{"basicAuth": []}])
+    @doc(summary='Delete User')
+    @marshal_with(UserSchema, code=204)
+    @use_kwargs({"username": fields.Str(required=True)})
+    def delete(self, user_id, **kwargs):
+        user = UserModel.query.get(user_id)
+        user.username = kwargs["username"]
+        if not user.id:
+            abort(400, error=f"User with username:{user.username} not found")
+        del user
+        return f'User with username:{user.username} was delete', 204
 
 @doc(tags=['Users'])
 class UsersListResource(MethodResource):
